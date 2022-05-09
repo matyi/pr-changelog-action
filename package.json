@@ -1,0 +1,24 @@
+{
+  "name": "github-action-pr-changelog",
+  "version": "1.0.0",
+  "description": "Github action to read changelog from PR description and give a new version.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DiceTechnology/github-action-pr-changelog.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DiceTechnology/github-action-pr-changelog/issues"
+  },
+  "homepage": "https://github.com/DiceTechnology/github-action-pr-changelog#readme",
+  "dependencies": {
+    "@actions/core": "^1.8.0",
+    "@actions/github": "^5.0.1"
+  }
+}

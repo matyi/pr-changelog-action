@@ -1,0 +1,23 @@
+name: 'PR Changelog GitHub action'
+description: 'Github action to read changelog from PR description and give a new version.'
+inputs:
+  github_token:
+    description: 'The GITHUB_TOKEN secret'
+    required: true  
+  destination_branch:
+    description: 'Base branch of the PR. Default is master'
+    default: master
+  section_mapping:
+    description: 'Section mapping to bump versions'
+    default: '### Feature => minor, ### Breaking change => minor, ### Bug fix => patch, ### Chore => patch'
+  initial_version:
+    description: 'Version number to use if no previous releases found'
+    default: '0.0.0'
+outputs:
+  changelog:
+    description: 'Changelog read from PR description'
+  version:
+    description: 'Version bump generated from PR description'
+runs:
+  using: 'node16'
+  main: 'dist/index.js'
