@@ -1,5 +1,8 @@
 name: 'PR Changelog GitHub action'
 description: 'Github action to read changelog from PR description and give a new version.'
+branding:
+  icon: 'chevrons-up'  
+  color: 'green'
 inputs:
   github_token:
     description: 'The GITHUB_TOKEN secret'
