@@ -8777,8 +8777,6 @@ const bumpVersion = (changelog, oldVersion) => {
   core.info(`Section mapping: ${section_mapping}`);
   section_mapping.some((mapping) => {
     const [section, bump] = mapping.split('=>').map(e => e.trim());
-    core.info(`Section: ${section}`);
-    core.info(`Bump: ${bump}`);
     if (changelog.search(section) >= 0) {
       core.info(`${section} found`);
       switch (bump) {
