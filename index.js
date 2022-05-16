@@ -46,7 +46,8 @@ const run = async () => {
         base: baseBranch,
         head: branchHead,
         sort: 'updated',
-        direction: 'desc'
+        direction: 'desc',
+        state: 'all'
       });
   
       if (pulls.length === 0) {
