@@ -1,14 +1,6 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
 
-const githubToken = core.getInput('github_token', { required: true });
-const octokit = github.getOctokit(githubToken);
-
-const credentials = {
-  owner: github.context.repo.owner,
-  repo: github.context.repo.repo,
-};
-
 const bumpVersion = (changelog, oldVersion) => {
   const version = oldVersion.split('.');
   const section_mapping = core.getInput('section_mapping').split(',');
@@ -31,52 +23,16 @@ const bumpVersion = (changelog, oldVersion) => {
   return version.join('.');
 }
 
-const getPullRequestBySHA = async () => {
-  const resp = await octokit.rest.pulls.list({
-    ...credentials,
-    sort: 'updated',
-    direction: 'desc',
-    state: 'closed',
-    per_page: 100
-  });
-
-  return resp.data.find(p => p.merge_commit_sha === github.context.sha);
-}
-
 const run = async () => {
   try {
-    let pullRequest;
+    const githubToken = core.getInput('github_token', { required: true });
+    const octokit = github.getOctokit(githubToken);
 
-    if (github.context.payload.pull_request) {
-      if (github.context.payload.pull_request.merged) {
-        pullRequest = await getPullRequestBySHA();
-      } else {
-        const baseBranch = core.getInput('destination_branch');
-        const sourceBranch = github.context.payload.pull_request.head.ref.replace(/^refs\/heads\//, '');
-        core.info(`Looking up a pull request with a source branch "${sourceBranch || '<not found>'}" and a base branch "${baseBranch || '<not specified>'}"`);
-
-        const branchHead = `${credentials.owner}:${sourceBranch}`;
-        const { data: pulls } = await octokit.rest.pulls.list({
-          ...credentials,
-          base: baseBranch,
-          head: branchHead,
-          sort: 'updated',
-          direction: 'desc',
-          state: 'all'
-        });
-    
-        if (pulls.length === 0) {
-          throw new Error(`No pull request found for a source branch "${sourceBranch || '<not found>'}" and a base branch "${baseBranch || '<not specified>'}"`);
-        }
-    
-        pullRequest = pulls[0];
-        if (pullRequest == null) {
-          throw new Error(`No open pull requests found for a source branch "${sourceBranch || '<not found>'}" and a base branch "${baseBranch || '<not specified>'}"`);
-        }
-      }
-    } else {
-      pullRequest = await getPullRequestBySHA();
-    }
+    const credentials = {
+      owner: github.context.repo.owner,
+      repo: github.context.repo.repo,
+    };
+    const pullRequest = github.context.payload.pull_request;
 
     const { data: { tag_name } } = await octokit.rest.repos.getLatestRelease(credentials);
     core.info(`latest release: ${tag_name}`);
