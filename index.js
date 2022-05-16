@@ -45,7 +45,8 @@ const run = async () => {
         ...credentials,
         base: baseBranch,
         head: branchHead,
-        state: 'open'
+        sort: 'updated',
+        direction: 'desc'
       });
   
       if (pulls.length === 0) {
