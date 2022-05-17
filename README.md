@@ -61,9 +61,10 @@ To bump package.json and create a new release when merging a PR:
 ```yaml
 name: Create new release
 on:
-  push:
+  pull_request:
     branches:
-      - master
+      - develop
+    types: [ closed ]
 
 jobs:
   release:
@@ -76,7 +77,7 @@ jobs:
         id: pr-changelog
         with:
           GITHUB_TOKEN: ${{ secrets.github_token }}
-          destination_branch: master
+          destination_branch: develop
       - run: |
           git config user.name github-actions
           git config user.email github-actions@github.com

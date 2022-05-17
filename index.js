@@ -3,23 +3,29 @@ const github = require('@actions/github');
 
 const bumpVersion = (changelog, oldVersion) => {
   const version = oldVersion.split('.');
+  let versionBump;
   const section_mapping = core.getInput('section_mapping').split(',');
   core.info(`Section mapping: ${section_mapping}`);
   section_mapping.some((mapping) => {
     const [section, bump] = mapping.split('=>').map(e => e.trim());
     if (changelog.search(section) >= 0) {
       core.info(`${section} found`);
-      switch (bump) {
-        case 'minor':
-          version[1] = Number(version[1]) + 1;
-          version[2] = 0;
-          return true;
-        case 'patch':
-          version[2] = Number(version[2]) + 1;
-          return true;
+      if (bump === 'minor') {
+        versionBump = bump;
+        return true;
       }
+      versionBump = bump;
     }
   });
+  switch (versionBump) {
+    case 'minor':
+      version[1] = Number(version[1]) + 1;
+      version[2] = 0;
+      break;
+    case 'patch':
+      version[2] = Number(version[2]) + 1;
+      break;
+  }
   return version.join('.');
 }
 
